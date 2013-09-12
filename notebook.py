@@ -1,4 +1,3 @@
-
 #coding = utf8
 __author__ = 'Jilin Yan'
 
@@ -40,7 +39,7 @@ def loop(notebook):
 
 if __name__ == '__main__':
     suffix = int(time.time())
-    with open("./notebook_%s.log" % suffix, "w") as notebook:
+    with open("./notebook_%s.txt" % suffix, "w") as notebook:
         loop(notebook)
 
 
