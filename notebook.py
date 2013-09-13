@@ -1,5 +1,6 @@
 #coding = utf8
-__author__ = 'Jilin Yan'
+
+#Contributors: fuqcool, Henry-Yan
 
 import sys, time
 
