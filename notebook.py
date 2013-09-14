@@ -2,7 +2,7 @@
 
 #Contributors: fuqcool, Henry-Yan
 
-import sys, time
+import sys, time, os
 
 def timestamp():
     return time.strftime('%m/%d %H:%M', time.localtime(time.time()))
@@ -39,9 +39,12 @@ def loop(notebook):
             exit(0)
 
 if __name__ == '__main__':
-    suffix = int(time.time())
-    with open("./notebook_%s.txt" % suffix, "w") as notebook:
+    print "Which problem set do you want to work on?"
+    problem_set = "set%s" % raw_input()
+
+    if os.path.exists("./%s" % problem_set) == False:
+        os.mkdir("./%s" % problem_set)
+    
+    with open("./%s/notebook.log" % problem_set, "a") as notebook:
         loop(notebook)
-
-
 
