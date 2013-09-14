@@ -108,7 +108,12 @@ def get_username():
 
 def get_problem_set():
     global problem_set
-    problem_set = "set" + prompt("Which problem set do you want to work on?")
+
+    ps_number = prompt("Which problem set do you want to work on?")
+    while len(ps_number) < 2:
+        ps_number = '0' + ps_number
+
+    problem_set = "set" + ps_number
 
 def main():
     global username
