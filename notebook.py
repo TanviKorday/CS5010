@@ -6,9 +6,10 @@ import sys, time, os, math
 NOTEBOOK_FILE = 'notebook.txt'
 USERNAME_FILE = 'me'
 
-notebook = None
 problem_set = None
 username = None
+
+records = []
 
 
 def timestamp():
@@ -18,25 +19,19 @@ def timestamp():
 
     return date, now, utc
 
-def write_log(txt):
-    global notebook, problem_set
-
-    if not os.path.exists(problem_set):
-        os.mkdir(problem_set)
+def write_log():
+    global problem_set
 
     notebook_path = os.path.join(problem_set, NOTEBOOK_FILE)
-    if not os.path.exists(notebook_path):
-        notebook = open(notebook_path, 'w')
-        write_log("Date  Who       Start Stop  Interruptions Question TimeOnTask    Comments")
-    else:
-        notebook = open(notebook_path, 'a')
-
-    notebook.write(txt + "\n")
-    notebook.flush()
+    with open(notebook_path, 'w') as notebook:
+        notebook.write("Date  Who       Start Stop  Interruptions Question TimeOnTask    Comments\n")
+        for record in records:
+            notebook.write(record + "\n")
 
 def commit_to_git():
     date, now, utc = timestamp()
-    write_log("========== committing to git %s ===========" % (date + ' ' + now))
+    records.append("========== committing to git %s ===========" % (date + ' ' + now))
+    write_log()
 
 def work_on_question():
     question = prompt("Which question are you going to work on?")
@@ -54,14 +49,15 @@ def work_on_question():
 
     #TODO interruptions
 
-    write_log(start_date + "  " +
-              username + ", " + coworkers + "  " +
-              start_time + "  " +
-              stop_time + "  " +
-              "    " +
-              question + "  " +
-              str(duration) + "  " +
-              comment)
+    records.append(start_date + "  " +
+                   username + ", " + coworkers + "  " +
+                   start_time + "  " +
+                   stop_time + "  " +
+                   "    " +
+                   question + "  " +
+                   str(duration) + "  " +
+                   comment)
+    write_log()
 
 def menu_loop():
     choice = prompt("Welcome! " + username + "\n" +
@@ -106,6 +102,19 @@ def get_username():
 
     return username
 
+def is_question_record(text):
+    return text[0] <= '9' and text[0] >= '0'
+
+def is_commit_record(text):
+    return text[0] == '='
+
+def parse_notebook(lines):
+    for line in lines:
+        if is_commit_record(line):
+            records.append(line[0:-1])
+        elif is_question_record(line):
+            records.append(line[0:-1])
+
 def get_problem_set():
     global problem_set
 
@@ -114,6 +123,15 @@ def get_problem_set():
         ps_number = '0' + ps_number
 
     problem_set = "set" + ps_number
+
+    # create problem set folder
+    if not os.path.exists(problem_set):
+        os.mkdir(problem_set)
+
+    notebook_path = os.path.join(problem_set, NOTEBOOK_FILE)
+    if os.path.exists(notebook_path):
+        with open(notebook_path, 'r') as notebook:
+            parse_notebook(notebook.readlines())
 
 def main():
     global username
