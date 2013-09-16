@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, time, os, math
+import sys, time, os, math, re
+from types import ListType, StringType
 
 NOTEBOOK_FILE = 'notebook.txt'
 USERNAME_FILE = 'me'
@@ -19,14 +20,42 @@ def timestamp():
 
     return date, now, utc
 
-def write_log():
-    global problem_set
+def column_len(lines, index):
+    length = 0
+    for line in lines:
+        if type(line) is ListType and len(line[index]) > length:
+            length = len(line[index])
 
+    return length + 2
+
+def pretty_print(records):
+    lines = [["Date", "Who", "Start", "Stop", "Interruptions", "Question", "TimeOnTask", "Comments"]]
+    for record in records:
+        if is_question_record(record):
+            words = re.split(r"\s{2,}", record)
+            if len(words) == 7:
+                words[4:4] = [""]
+            lines.append(words)
+        elif is_commit_record(record):
+            lines.append(record)
+
+    output = ''
+    for line in lines:
+        if type(line) is ListType:
+            index = 0
+            for word in line:
+                output += ("%-" + str(column_len(lines, index)) + "s") % word
+                index += 1
+            output += "\n"
+        elif type(line) is StringType:
+            output += line + "\n"
+
+    return output
+
+def write_log():
     notebook_path = os.path.join(problem_set, NOTEBOOK_FILE)
     with open(notebook_path, 'w') as notebook:
-        notebook.write("Date  Who       Start Stop  Interruptions Question TimeOnTask    Comments\n")
-        for record in records:
-            notebook.write(record + "\n")
+        notebook.write(pretty_print(records))
 
 def commit_to_git():
     date, now, utc = timestamp()
