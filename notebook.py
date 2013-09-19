@@ -62,12 +62,22 @@ def commit_to_git():
     records.append("========== committing to git %s ===========" % (date + ' ' + now))
     write_log()
 
+def validate_yes_no(msg):
+    return msg.upper() == 'Y'
+
+def validate_integer(msg):
+    try:
+        value = int(msg)
+        return True
+    except:
+        return False
+
 def work_on_question():
-    question = prompt("Which question are you going to work on?")
+    question = prompt("Which question are you going to work on?", validate_integer)
 
     start_date, start_time, start_utc = timestamp()
 
-    prompt("Finished?")
+    prompt("Finished? [y/n]", validate_yes_no)
     stop_date, stop_time, stop_utc = timestamp()
 
     duration = int(math.ceil((stop_utc - start_utc) / 60))
@@ -104,9 +114,20 @@ def menu_loop():
     else:
         print "invalid input"
 
-def prompt(msg):
-    print msg
-    return raw_input("> ").strip()
+def prompt(msg, validate_p = None):
+    validate = False
+
+    while not validate:
+        print msg
+        user_input = raw_input("> ").strip()
+
+        if validate_p:
+            validate = validate_p(user_input)
+        else:
+            validate = True
+
+    return user_input
+
 
 def username_exists():
     return os.path.isfile(USERNAME_FILE)
@@ -147,7 +168,7 @@ def parse_notebook(lines):
 def get_problem_set():
     global problem_set
 
-    ps_number = prompt("Which problem set do you want to work on?")
+    ps_number = prompt("Which problem set do you want to work on?", validate_integer)
     while len(ps_number) < 2:
         ps_number = '0' + ps_number
 
