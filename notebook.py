@@ -75,6 +75,9 @@ def validate_integer(msg):
     except:
         return False
 
+def validate_non_empty(msg):
+    return msg != ''
+
 def work_on_question():
     question = prompt("Which question are you going to work on?", validate_integer)
 
@@ -85,7 +88,7 @@ def work_on_question():
 
     duration = int(math.ceil((stop_utc - start_utc) / 60))
 
-    comment = prompt("What have you done?")
+    comment = prompt("What have you done?", validate_non_empty)
 
     coworkers = prompt("Who is working with you? (split by ',')").split(',')
     if len(coworkers) == 1 and coworkers[0] == '':
@@ -139,7 +142,7 @@ def username_exists():
     return os.path.isfile(USERNAME_FILE)
 
 def ask_for_username():
-    return prompt("May I have your name?")
+    return prompt("May I have your name?", validate_non_empty)
 
 def save_username(username):
     with open(USERNAME_FILE, 'w') as f:
