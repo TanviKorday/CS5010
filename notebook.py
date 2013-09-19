@@ -39,12 +39,17 @@ def pretty_print(records):
         elif is_commit_record(record):
             lines.append(record)
 
+    print "pretty print", lines
+
     output = ''
     for line in lines:
         if type(line) is ListType:
             index = 0
             for word in line:
-                output += ("%-" + str(column_len(lines, index)) + "s") % word
+                if index != 7:
+                    output += ("%-" + str(column_len(lines, index)) + "s") % word
+                else:
+                    output += word
                 index += 1
             output += "\n"
         elif type(line) is StringType:
