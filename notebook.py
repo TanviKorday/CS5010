@@ -39,8 +39,6 @@ def pretty_print(records):
         elif is_commit_record(record):
             lines.append(record)
 
-    print "pretty print", lines
-
     output = ''
     for line in lines:
         if type(line) is ListType:
@@ -89,12 +87,16 @@ def work_on_question():
 
     comment = prompt("What have you done?")
 
-    coworkers = prompt("Who is working with you?")
+    coworkers = prompt("Who is working with you? (split by ',')").split(',')
+    if len(coworkers) == 1 and coworkers[0] == '':
+        coworkers = [username]
+    else:
+        coworkers.insert(0, username)
 
     #TODO interruptions
 
     records.append(start_date + "  " +
-                   username + ", " + coworkers + "  " +
+                   ','.join(coworkers) + "  " +
                    start_time + "  " +
                    stop_time + "  " +
                    "    " +
@@ -132,7 +134,6 @@ def prompt(msg, validate_p = None):
             validate = True
 
     return user_input
-
 
 def username_exists():
     return os.path.isfile(USERNAME_FILE)
