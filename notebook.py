@@ -43,14 +43,17 @@ def aggregate_info(lines):
 
     for line in lines[1:]:
         if type(line) is ListType:
-            q = get_question(line[5])
+            q = get_question(int(line[5]))
             q["total"] += int(line[6])
 
-    output = ''
     # sort questions by question number
+    questions = sorted(questions, key=lambda q: q["num"])
+
+    output = ''
     for q in questions:
         output += 'Total Time On Task Q%s (minutes)      %d\n' % (q["num"], q["total"])
 
+    output += '\n'
     for q in questions:
         output += 'TOTQ%s (hours and tenths)             %.2f\n' % (q["num"], q["total"] / 60.0)
 
