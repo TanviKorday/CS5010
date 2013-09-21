@@ -83,12 +83,12 @@ def work_on_question():
 
     start_date, start_time, start_utc = timestamp()
 
+    comment = prompt("What are you going to do?", validate_non_empty)
+
     prompt("Finished? [y/n]", validate_yes_no)
     stop_date, stop_time, stop_utc = timestamp()
 
     duration = int(math.ceil((stop_utc - start_utc) / 60))
-
-    comment = prompt("What have you done?", validate_non_empty)
 
     coworkers = prompt("Who is working with you? (split by ',')").split(',')
     if len(coworkers) == 1 and coworkers[0] == '':
