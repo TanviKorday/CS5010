@@ -28,6 +28,35 @@ def column_len(lines, index):
 
     return length + 2
 
+def aggregate_info(lines):
+    questions = []
+
+    def get_question(num):
+        for q in questions:
+            if q["num"] == num:
+                return q
+
+        question = { "num": num, "total": 0 }
+        questions.append(question)
+
+        return question
+
+    for line in lines[1:]:
+        if type(line) is ListType:
+            q = get_question(line[5])
+            q["total"] += int(line[6])
+
+    output = ''
+    # sort questions by question number
+    for q in questions:
+        output += 'Total Time On Task Q%s (minutes)      %d\n' % (q["num"], q["total"])
+
+    for q in questions:
+        output += 'TOTQ%s (hours and tenths)             %.2f\n' % (q["num"], q["total"] / 60.0)
+
+    return output
+
+
 def pretty_print(records):
     lines = [["Date", "Who", "Start", "Stop", "Interruptions", "Question", "TimeOnTask", "Comments"]]
     for record in records:
@@ -52,6 +81,8 @@ def pretty_print(records):
             output += "\n"
         elif type(line) is StringType:
             output += line + "\n"
+
+    output += '\n' + aggregate_info(lines)
 
     return output
 
