@@ -96,7 +96,11 @@ def write_log():
 
 def commit_to_git():
     date, now, utc = timestamp()
-    records.append("========== committing to git %s ===========" % (date + ' ' + now))
+    record = "========== committing to git %s ===========" % (date + ' ' + now)
+    records.append(record)
+
+    print '\n' + record + '\n'
+
     write_log()
 
 def validate_yes_no(msg):
@@ -132,14 +136,18 @@ def work_on_question():
 
     #TODO interruptions
 
-    records.append(start_date + "  " +
-                   ','.join(coworkers) + "  " +
-                   start_time + "  " +
-                   stop_time + "  " +
-                   "    " +
-                   question + "  " +
-                   str(duration) + "  " +
-                   comment)
+    record = start_date + "  " + \
+             ','.join(coworkers) + "  " + \
+             start_time + "  " + \
+             stop_time + "  " + \
+             "    " + \
+             question + "  " + \
+             str(duration) + "  " + \
+             comment
+    records.append(record)
+
+    print '\n' + record + '\n'
+
     write_log()
 
 def menu_loop():
