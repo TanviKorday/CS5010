@@ -126,7 +126,7 @@ def work_on_question():
     prompt("Finished? [y/n]", validate_yes_no)
     stop_date, stop_time, stop_utc = timestamp()
 
-    duration = int(math.ceil((stop_utc - start_utc) / 60))
+    duration = int(math.floor((stop_utc - start_utc) / 60))
 
     coworkers = prompt("Who is working with you? (split by ',')").split(',')
     if len(coworkers) == 1 and coworkers[0] == '':
