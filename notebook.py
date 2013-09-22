@@ -172,6 +172,8 @@ def prompt(msg, validate_p = None):
     while not validate:
         print msg
         user_input = raw_input("> ").strip()
+        # replace continuous space with single space
+        user_input = re.sub(r"\s{2,}", " ", user_input)
 
         if validate_p:
             validate = validate_p(user_input)
