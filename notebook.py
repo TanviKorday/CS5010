@@ -55,7 +55,7 @@ def aggregate_info(lines):
 
     output += '\n'
     for q in questions:
-        output += 'TOTQ%s (hours and tenths)             %.2f\n' % (q["num"], q["total"] / 60.0)
+        output += 'TOTQ%s (hours and tenths)             %.1f\n' % (q["num"], q["total"] / 60.0)
 
     return output
 
